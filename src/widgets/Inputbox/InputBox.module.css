@@ -1,0 +1,35 @@
+.inputbox_wrapper{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.inputbox_wrapper label {
+  display: block;
+  font-weight: 400;
+  color: #344054;
+  font-size: 12px;
+}
+
+.input_box{
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid #D0D5DD;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  background-color: #fff;
+  color: #101828;
+}
+
+.input_box::placeholder {
+  color: #667085;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.input_box:focus{
+  outline: none;
+  border: 1px solid #84CAFF;
+  box-shadow: 0px 0px 0px 4px #D1E9FF;
+}

@@ -1,0 +1,34 @@
+.whole_container {
+  position: relative;
+  display: flex;
+  overflow-x: hidden;
+}
+
+.header {
+  position: fixed;
+  height: 54px;
+  width: 100%;
+  background-color: lightcoral;
+  z-index: 999;
+}
+
+aside {
+  position: fixed;
+  width: 17%;
+  border-right: 1px solid #e5e9eb;
+  background: #fff;
+  z-index: 499;
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background-color: lightgreen;
+}
+
+.main_content {
+  width: 83vw;
+  margin-top:54px;
+  margin-left: 17%;
+  background-color: rgba(246, 248, 249, 1);
+  padding:10px;
+}
