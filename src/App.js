@@ -11,8 +11,8 @@ function App() {
       <aside></aside>
 
       <div className="main_content">
-        {/* <SchoolSaleConfirmationContainer /> */}
-        <CollegeSaleConfirmationContainer/> 
+        <SchoolSaleConfirmationContainer />
+        {/* <CollegeSaleConfirmationContainer/>  */}
       </div>
     </div>
   );

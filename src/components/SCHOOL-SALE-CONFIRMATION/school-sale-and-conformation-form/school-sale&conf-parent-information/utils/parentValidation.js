@@ -67,8 +67,8 @@ export function validateParentInfo(formData) {
   const motherEmail = safeTrim(formData.motherEmail);
 
   // Validate Father Information
+  // If father name is entered, phone and email are required
   if (fatherName) {
-    // If father name is entered, phone and email are required
     if (!fatherPhone) {
       errors.fatherPhone = "Phone number is required when father name is provided";
     } else if (!isValidPhone(fatherPhone)) {
@@ -82,9 +82,26 @@ export function validateParentInfo(formData) {
     }
   }
 
+  // If father phone is entered, name and email are required
+  if (fatherPhone) {
+    if (!fatherName) {
+      errors.fatherName = "Father name is required when phone number is provided";
+    }
+    
+    if (!isValidPhone(fatherPhone)) {
+      errors.fatherPhone = "Phone number must start with 6, 7, 8, or 9 and be exactly 10 digits";
+    }
+    
+    if (!fatherEmail) {
+      errors.fatherEmail = "Email is required when phone number is provided";
+    } else if (!isValidEmail(fatherEmail)) {
+      errors.fatherEmail = "Please enter a valid email address";
+    }
+  }
+
   // Validate Mother Information
+  // If mother name is entered, phone and email are required
   if (motherName) {
-    // If mother name is entered, phone and email are required
     if (!motherPhone) {
       errors.motherPhone = "Phone number is required when mother name is provided";
     } else if (!isValidPhone(motherPhone)) {
@@ -98,22 +115,34 @@ export function validateParentInfo(formData) {
     }
   }
 
-  // Also validate phone number format even if name is not provided (if phone is entered)
-  if (fatherPhone && !isValidPhone(fatherPhone)) {
-    errors.fatherPhone = "Phone number must start with 6, 7, 8, or 9 and be exactly 10 digits";
+  // If mother phone is entered, name and email are required
+  if (motherPhone) {
+    if (!motherName) {
+      errors.motherName = "Mother name is required when phone number is provided";
+    }
+    
+    if (!isValidPhone(motherPhone)) {
+      errors.motherPhone = "Phone number must start with 6, 7, 8, or 9 and be exactly 10 digits";
+    }
+    
+    if (!motherEmail) {
+      errors.motherEmail = "Email is required when phone number is provided";
+    } else if (!isValidEmail(motherEmail)) {
+      errors.motherEmail = "Please enter a valid email address";
+    }
   }
 
-  if (motherPhone && !isValidPhone(motherPhone)) {
-    errors.motherPhone = "Phone number must start with 6, 7, 8, or 9 and be exactly 10 digits";
+  // Also validate email format even if name/phone is not provided (if email is entered)
+  if (fatherEmail && !fatherName && !fatherPhone) {
+    if (!isValidEmail(fatherEmail)) {
+      errors.fatherEmail = "Please enter a valid email address";
+    }
   }
 
-  // Also validate email format even if name is not provided (if email is entered)
-  if (fatherEmail && !isValidEmail(fatherEmail)) {
-    errors.fatherEmail = "Please enter a valid email address";
-  }
-
-  if (motherEmail && !isValidEmail(motherEmail)) {
-    errors.motherEmail = "Please enter a valid email address";
+  if (motherEmail && !motherName && !motherPhone) {
+    if (!isValidEmail(motherEmail)) {
+      errors.motherEmail = "Please enter a valid email address";
+    }
   }
 
   return errors;

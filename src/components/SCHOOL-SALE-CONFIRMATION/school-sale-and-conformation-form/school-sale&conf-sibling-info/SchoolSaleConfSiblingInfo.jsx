@@ -6,6 +6,7 @@ import styles from "./SchoolSaleConfSiblingInfo.module.css";
 import UploadIcon from "../../../../assets/school-sale-conf-assets/UploadIcon";
 import PlusIcon from "../../../../assets/school-sale-conf-assets/PlusIcon";
 import { useRelationTypes, useClasses } from "./hooks/SchoolSiblings";
+import useNameCapitalization from "../../../../hooks/useNameCapitalization";
 
 const SchoolSaleConfSiblingInfo = ({
   siblings,
@@ -31,6 +32,9 @@ const SchoolSaleConfSiblingInfo = ({
     getClassNameById,
     loading: classesLoading,
   } = useClasses();
+
+  // Name capitalization hook
+  const { capitalizeWords } = useNameCapitalization();
 
   // Handle relation type change - convert name to ID before storing
   const handleRelationTypeChange = (siblingId) => (e) => {
@@ -77,23 +81,27 @@ const SchoolSaleConfSiblingInfo = ({
   };
 
   /**
-   * Handler for name input - only allows alphabets and spaces
+   * Handler for name input - only allows alphabets and spaces, and capitalizes first letter of each word
    */
   const handleNameChange = (siblingId) => (e) => {
     const { value } = e.target;
     // Remove any non-alphabetic characters (keep only letters and spaces)
     const alphabetsOnly = value.replace(/[^a-zA-Z\s]/g, "");
-    onSiblingChange(siblingId, "siblingName", alphabetsOnly);
+    // Capitalize first letter of each word
+    const capitalizedValue = capitalizeWords(alphabetsOnly);
+    onSiblingChange(siblingId, "siblingName", capitalizedValue);
   };
 
   /**
-   * Handler for organization name input - only allows alphabets and spaces
+   * Handler for organization name input - only allows alphabets and spaces, and capitalizes first letter of each word
    */
   const handleOrganizationNameChange = (siblingId) => (e) => {
     const { value } = e.target;
     // Remove any non-alphabetic characters (keep only letters and spaces)
     const alphabetsOnly = value.replace(/[^a-zA-Z\s]/g, "");
-    onSiblingChange(siblingId, "siblingSchool", alphabetsOnly);
+    // Capitalize first letter of each word
+    const capitalizedValue = capitalizeWords(alphabetsOnly);
+    onSiblingChange(siblingId, "siblingSchool", capitalizedValue);
   };
 
   /**

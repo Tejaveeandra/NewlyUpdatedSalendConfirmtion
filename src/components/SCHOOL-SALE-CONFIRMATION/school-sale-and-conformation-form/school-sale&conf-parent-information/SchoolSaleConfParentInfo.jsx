@@ -3,19 +3,58 @@ import Inputbox from "../../../../widgets/Inputbox/InputBox";
 import Dropdown from "../../../../widgets/Dropdown/Dropdown";
 import styles from "./SchoolSaleConfParentInfo.module.css";
 import useSchoolParentFormState from "./hooks/useSchoolParentFormState";
+import useNameCapitalization from "../../../../hooks/useNameCapitalization";
 
 const SchoolSaleConfParentInfo = ({ formData, onChange, errors = {} }) => {
   const state = useSchoolParentFormState({ formData, onChange });
+  const { handleNameChange: capitalizeName } = useNameCapitalization();
 
   /**
-   * Handler for phone number input - only allows numbers and max 10 digits
+   * Handler for phone number input - only allows numbers, max 10 digits, and first digit must be 6, 7, 8, or 9
    */
   const handlePhoneChange = (e) => {
     const { name, value } = e.target;
     // Remove any non-digit characters
     const digitsOnly = value.replace(/\D/g, "");
+    
+    // If field is empty or being cleared, allow it
+    if (digitsOnly === "") {
+      const filteredEvent = {
+        ...e,
+        target: {
+          ...e.target,
+          name,
+          value: "",
+        },
+      };
+      onChange(filteredEvent);
+      return;
+    }
+    
+    // Filter: Only allow digits 6, 7, 8, 9 as the first digit
+    // For subsequent digits (position 1+), allow any digit (0-9)
+    let validDigits = "";
+    for (let i = 0; i < digitsOnly.length; i++) {
+      const digit = digitsOnly[i];
+      if (i === 0) {
+        // First digit must be 6, 7, 8, or 9
+        if (/[6789]/.test(digit)) {
+          validDigits += digit;
+        }
+        // If first digit is invalid, stop processing
+        else {
+          break;
+        }
+      } else {
+        // Subsequent digits can be any number (0-9)
+        if (/\d/.test(digit)) {
+          validDigits += digit;
+        }
+      }
+    }
+    
     // Limit to 10 digits
-    const limitedDigits = digitsOnly.slice(0, 10);
+    const limitedDigits = validDigits.slice(0, 10);
     
     // Create a new event with the filtered value
     const filteredEvent = {
@@ -31,24 +70,10 @@ const SchoolSaleConfParentInfo = ({ formData, onChange, errors = {} }) => {
   };
 
   /**
-   * Handler for name input - only allows alphabets and spaces
+   * Handler for name input - only allows alphabets and spaces, and capitalizes first letter of each word
    */
   const handleNameChange = (e) => {
-    const { name, value } = e.target;
-    // Remove any non-alphabetic characters (keep only letters and spaces)
-    const alphabetsOnly = value.replace(/[^a-zA-Z\s]/g, "");
-    
-    // Create a new event with the filtered value
-    const filteredEvent = {
-      ...e,
-      target: {
-        ...e.target,
-        name,
-        value: alphabetsOnly,
-      },
-    };
-    
-    onChange(filteredEvent);
+    capitalizeName(e, onChange);
   };
 
   return (
@@ -61,13 +86,18 @@ const SchoolSaleConfParentInfo = ({ formData, onChange, errors = {} }) => {
 
       {/* Father Row 1 */}
       <div className={styles.formGrid}>
-        <Inputbox
-          label="Father Name"
-          name="fatherName"
-          placeholder="Enter full name"
-          value={formData.fatherName}
-          onChange={handleNameChange}
-        />
+        <div>
+          <Inputbox
+            label="Father Name"
+            name="fatherName"
+            placeholder="Enter full name"
+            value={formData.fatherName}
+            onChange={handleNameChange}
+          />
+          {errors.fatherName && (
+            <span className={styles.errorMessage}>{errors.fatherName}</span>
+          )}
+        </div>
 
         <div className={styles.inputWithIcon}>
           <Inputbox
@@ -159,13 +189,18 @@ const SchoolSaleConfParentInfo = ({ formData, onChange, errors = {} }) => {
 
       {/* Mother Row 1 */}
       <div className={styles.formGrid}>
-        <Inputbox
-          label="Mother Name"
-          name="motherName"
-          placeholder="Enter full name"
-          value={formData.motherName}
-          onChange={handleNameChange}
-        />
+        <div>
+          <Inputbox
+            label="Mother Name"
+            name="motherName"
+            placeholder="Enter full name"
+            value={formData.motherName}
+            onChange={handleNameChange}
+          />
+          {errors.motherName && (
+            <span className={styles.errorMessage}>{errors.motherName}</span>
+          )}
+        </div>
         <div className={styles.inputWithIcon}>
           <Inputbox
             label="Phone Number"
